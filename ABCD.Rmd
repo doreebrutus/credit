@@ -1,0 +1,96 @@
+---
+title: "rMARKDOWN"
+author: "Brutus Doree"
+date: "2022-12-10"
+output: html_document
+---
+
+```{r}
+library(utils)
+library(readr)
+```
+
+## Importons en R le jeux de donnees...
+```{r}
+df<-read.csv("CreditBancaire.csv")
+df
+```
+
+
+## Explorons le fichier
+
+```{r}
+str(df)
+```
+
+
+## Regressons le nombre de jours de retards sur ....
+
+```{r}
+
+reg<-lm(Jours~Credit+Type,data=df)
+reg
+```
+
+## Affichons les details de la regression...
+
+```{r}
+summary(reg)
+
+```
+
+## Affichons uniquement :
+### Tableau de coefficient, Statistiques de student, Probabilites.
+
+```{r}
+resultat_lm<-summary(reg)
+resultat_lm$coefficients[,c(1,3,4)]
+
+```
+
+## Affichons uniquement deux colonnes:
+### Coefficients estimes, valeurs de la statistiques de student
+
+```{r}
+resultat_lm<-summary(reg)
+resultat_lm$coefficients[,c(1,3)]
+
+```
+
+## Realisons un graphique en nuage de point
+### Credit
+```{r}
+a<-lm(Jours~Credit,data=df)
+par(mfrow=c(2,2))
+plot(a, pch=20)
+abline(a,h=4, col=c("green"))
+
+```
+### Type
+```{r}
+b<-lm(Jours~Type,data=df)
+b
+par(mfrow=c(2,2))
+plot(b,pch=20)
+abline(b, col=c("yellow"))
+
+```
+
+## Creons une fonction...
+
+```{r}
+fcoefficient<-function(x){
+  data<-data.frame(y, x1)
+  estimation<-summary(lm(y~.,data),na.rm=T)
+  Regression<-list(summary(lm(y~.,data),na.rm=T)$coefficients[,c(1,3)])
+  return(Regression)
+}
+
+#Exemple
+y<-c(30,45,90,42,10)
+x1<-c(14,80,46,14,17)
+fcoefficient(data)
+
+
+```
+
